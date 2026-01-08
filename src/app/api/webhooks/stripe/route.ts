@@ -130,9 +130,13 @@ export async function POST(req: Request) {
             stripe_subscription_id: subscription.id,
             stripe_customer_id: subscription.customer as string,
             status: subscription.status,
-            current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
-            current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
-            cancel_at_period_end: subscription.cancel_at_period_end,
+            current_period_start: subscription.current_period_start 
+              ? new Date((subscription.current_period_start as number) * 1000).toISOString() 
+              : null,
+            current_period_end: subscription.current_period_end 
+              ? new Date((subscription.current_period_end as number) * 1000).toISOString() 
+              : null,
+            cancel_at_period_end: subscription.cancel_at_period_end ?? false,
             updated_at: new Date().toISOString(),
           });
 
