@@ -313,30 +313,30 @@ export default function Page() {
           animation: 'gradient-shift 15s ease infinite'
         }}></div>
       
-      {/* Parallax floating elements */}
+      {/* Parallax floating elements - positioned at edges */}
       <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
-        {/* Morphing blob shapes */}
-        <div className="absolute top-10 right-10 w-64 h-64 bg-gradient-to-br from-purple-300/20 to-cyan-300/20 rounded-full blur-3xl" style={{
+        {/* Morphing blob shapes - reduced opacity and moved to corners */}
+        <div className="absolute -top-20 -right-20 w-64 h-64 bg-gradient-to-br from-purple-300/10 to-cyan-300/10 rounded-full blur-3xl" style={{
           animation: 'morph 10s ease-in-out infinite'
         }}></div>
-        <div className="absolute bottom-20 left-20 w-48 h-48 bg-gradient-to-br from-fuchsia-300/20 to-violet-300/20 rounded-full blur-3xl" style={{
+        <div className="absolute -bottom-20 -left-20 w-48 h-48 bg-gradient-to-br from-fuchsia-300/10 to-violet-300/10 rounded-full blur-3xl" style={{
           animation: 'morph 12s ease-in-out infinite',
           animationDelay: '2s'
         }}></div>
         <div 
-          className="absolute top-20 left-10 w-32 h-32 bg-purple-200/20 rounded-full blur-3xl"
+          className="absolute top-0 -left-20 w-32 h-32 bg-purple-200/8 rounded-full blur-3xl"
           style={{transform: `translateY(${scrollY * 0.1}px)`}}
         ></div>
         <div 
-          className="absolute top-40 right-20 w-48 h-48 bg-violet-200/20 rounded-full blur-3xl"
+          className="absolute top-10 -right-32 w-48 h-48 bg-violet-200/8 rounded-full blur-3xl"
           style={{transform: `translateY(${scrollY * 0.15}px)`}}
         ></div>
         <div 
-          className="absolute bottom-40 left-1/4 w-40 h-40 bg-cyan-200/20 rounded-full blur-3xl"
+          className="absolute bottom-0 -left-28 w-40 h-40 bg-cyan-200/8 rounded-full blur-3xl"
           style={{transform: `translateY(${scrollY * -0.08}px)`}}
         ></div>
         <div 
-          className="absolute top-1/2 right-10 w-56 h-56 bg-fuchsia-200/20 rounded-full blur-3xl"
+          className="absolute top-1/2 -right-32 w-56 h-56 bg-fuchsia-200/8 rounded-full blur-3xl"
           style={{transform: `translateY(${scrollY * 0.12}px)`}}
         ></div>
       </div>
@@ -361,9 +361,9 @@ export default function Page() {
         </div>
       )}
       
-      {/* Floating particles */}
+      {/* Floating particles - hidden */}
       {isMounted && (
-        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden hidden">
           {particles.map((particle, i) => (
             <div
               key={i}
@@ -416,8 +416,8 @@ export default function Page() {
         }}></div>
       </div>
       
-      {/* Floating action badges */}
-      <div className="fixed inset-0 pointer-events-none z-20 overflow-hidden">
+      {/* Floating action badges - hidden */}
+      <div className="fixed inset-0 pointer-events-none z-20 overflow-hidden hidden">
         <div className="absolute top-20 left-10 bg-gradient-to-r from-cyan-400 to-purple-500 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg" style={{
           animation: 'float 6s ease-in-out infinite'
         }}>💪 Get Fit</div>
