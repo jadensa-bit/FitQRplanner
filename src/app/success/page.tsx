@@ -1,84 +1,88 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function SuccessPage() {
+  const searchParams = useSearchParams();
+  const sessionId = searchParams.get("session_id");
+  const [orderInfo, setOrderInfo] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    const intakeRaw = window.localStorage.getItem("fitqr_intake");
-    if (intakeRaw) {
-      fetch("/api/intake", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: intakeRaw,
-      })
-        .then(() => {
-          window.localStorage.removeItem("fitqr_intake");
+    // Fetch order details
+    if (sessionId) {
+      fetch(`/api/order-status?session_id=${sessionId}`)
+        .then(res => {
+          if (!res.ok) {
+            throw new Error('Failed to fetch order');
+          }
+          return res.text();
         })
-        .catch(() => {});
+        .then(text => {
+          try {
+            const data = JSON.parse(text);
+            setOrderInfo(data);
+          } catch (e) {
+            console.error('JSON parse error:', e, 'Response:', text);
+          }
+          setLoading(false);
+        })
+        .catch(err => {
+          console.error('Fetch error:', err);
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
     }
-  }, []);
+  }, [sessionId]);
+
   return (
-    <main className="min-h-screen flex items-center justify-center bg-zinc-50 px-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8 text-center">
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-violet-50 to-cyan-50 px-4 py-12">
+      <div className="max-w-2xl w-full bg-white rounded-2xl shadow-2xl p-8">
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading...</p>
+          </div>
+        ) : (
+          <>
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4">
+                <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h1 className="text-3xl font-bold mb-2 text-gray-900">Payment Successful! 🎉</h1>
+              <p className="text-lg text-gray-600">Your FitQR plan is on its way!</p>
+            </div>
 
-        <h1 className="text-2xl font-bold mb-4 text-red-900">You did it! Your order is in 🎉</h1>
+            {orderInfo && (
+              <div className="bg-gray-50 rounded-xl p-6 mb-6">
+                <h2 className="text-xl font-bold mb-4">Order Confirmation</h2>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between"><span>Order #:</span><span className="font-mono">{orderInfo.id?.substring(0, 8)}</span></div>
+                  <div className="flex justify-between"><span>Email:</span><span>{orderInfo.customer_email}</span></div>
+                  <div className="flex justify-between"><span>Plan:</span><span className="capitalize">{orderInfo.plan_id}</span></div>
+                  <div className="flex justify-between"><span>Amount:</span><span className="font-bold text-green-600">${(orderInfo.amount_total / 100).toFixed(2)}</span></div>
+                  <div className="flex justify-between"><span>Status:</span><span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold">PAID</span></div>
+                </div>
+              </div>
+            )}
 
-        <p className="text-zinc-600 mb-6">
-          <span className="font-semibold text-black">Your personalized FitQR booklet is being crafted just for you.</span><br /><br />
-          <span className="text-green-700 font-semibold">Bonus:</span> You’ll also get a free mini habit tracker PDF and a sample meal-prep guide for quick, healthy eating!
-        </p>
+            <div className="bg-purple-50 border-2 border-purple-200 rounded-xl p-6 mb-6">
+              <h2 className="text-xl font-bold mb-3">What's Next?</h2>
+              <div className="space-y-3 text-sm">
+                <div className="flex gap-3"><span className="font-bold text-purple-600">1.</span><span>Check your email for your custom plan (within 24 hours)</span></div>
+                <div className="flex gap-3"><span className="font-bold text-purple-600">2.</span><span>Download your free habit tracker & meal prep guide</span></div>
+                <div className="flex gap-3"><span className="font-bold text-purple-600">3.</span><span>Start with one workout and one healthy meal this week!</span></div>
+              </div>
+            </div>
 
-        <div className="mb-6 text-left">
-          <h2 className="text-lg font-bold mb-2 text-stone-900">Your Next Steps:</h2>
-          <ul className="list-decimal list-inside text-zinc-700 space-y-1">
-            <li>Check your email for your custom booklet (usually within 24 hours)</li>
-            <li>Download your free habit tracker and meal-prep guide</li>
-            <li>Pick a meal and a workout to try this week—keep it simple!</li>
-            <li>Share your journey: Tag <span className="font-semibold">@fitqr</span> on social for a shoutout!</li>
-          </ul>
-        </div>
-
-        <div className="mb-6">
-          <p className="text-sm text-zinc-500">Your plan and meal guide are custom-made, so you get exactly what fits your life and budget. If you have questions or want tweaks, just reply to your confirmation email!</p>
-        </div>
-
-        <div className="mb-6 flex items-center gap-3">
-          <span className="inline-block bg-amber-100 text-amber-800 rounded-full px-3 py-1 text-xs font-bold">BONUS</span>
-          <span className="text-xs text-amber-700 font-semibold">Limited time: All orders tonight get the bonus habit tracker free!</span>
-          <span role="img" aria-label="habit tracker" className="text-2xl">📒</span>
-        </div>
-
-        {/* What to expect next timeline */}
-        <div className="mb-8">
-          <h2 className="text-lg font-bold mb-2 text-stone-900">What happens next?</h2>
-          <ol className="relative border-l-2 border-red-200 pl-6 space-y-4">
-            <li>
-              <span className="absolute -left-3 top-1 w-4 h-4 bg-red-400 rounded-full border-2 border-white"></span>
-              <span className="font-semibold">Order received</span> — I’m starting your custom booklet!
-            </li>
-            <li>
-              <span className="absolute -left-3 top-1 w-4 h-4 bg-amber-400 rounded-full border-2 border-white"></span>
-              <span className="font-semibold">Booklet delivered</span> — Check your email (within 24 hours)
-            </li>
-            <li>
-              <span className="absolute -left-3 top-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white"></span>
-              <span className="font-semibold">Start your journey</span> — Use your booklet and bonus tracker to crush your goals!
-            </li>
-          </ol>
-        </div>
-
-        {/* Refer a Friend section */}
-        <div className="mb-6 bg-green-50 border border-green-200 rounded-2xl p-5 text-center">
-          <h3 className="font-bold text-green-900 mb-1">Refer a Friend, Get Rewarded!</h3>
-          <p className="text-green-800 text-sm mb-2">Share FitQR with a friend. If they order, you both get a bonus mini-guide!</p>
-          <p className="text-xs text-green-700">Send them this link: <span className="underline">fitqr.com</span></p>
-        </div>
-
-        <a
-          href="/"
-          className="inline-block rounded-xl bg-black text-white px-6 py-3 text-sm font-medium hover:bg-zinc-800 transition"
-        >
-          Back to FitQR
-        </a>
+            <a href="/" className="block text-center rounded-xl bg-purple-600 text-white px-8 py-3 font-semibold hover:bg-purple-700">
+              Back to FitQR
+            </a>
+          </>
+        )}
       </div>
     </main>
   );
