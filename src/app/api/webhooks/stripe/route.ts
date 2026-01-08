@@ -119,6 +119,7 @@ export async function POST(req: Request) {
 
       case "customer.subscription.created":
       case "customer.subscription.updated": {
+        // Using 'any' type to avoid Stripe SDK type definition conflicts
         const subscription = event.data.object as any;
         
         console.log(`✅ Subscription ${event.type}: ${subscription.id}`);
