@@ -19,6 +19,12 @@ export async function POST(req: Request) {
     medicalHistory
   } = body;
 
+  // Check if Supabase is available
+  if (!supabase) {
+    console.warn('⚠️ Supabase not configured, skipping database insert');
+    return NextResponse.json({ success: true, warning: 'Database not configured' });
+  }
+
   const { error: supabaseError } = await supabase.from('planner_intake').insert([
     {
       customer_name: customerName || '',
