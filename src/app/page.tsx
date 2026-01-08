@@ -182,7 +182,7 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-stone-50 px-6 py-12 text-stone-800">
       {/* Limited-Time Offer Banner */}
-      <div className="w-full bg-gradient-to-r from-pink-500 via-yellow-400 to-orange-400 text-white py-3 px-4 flex items-center justify-center font-bold text-lg shadow animate-fade-in z-50 sticky top-0 rounded-b-2xl mb-6">
+      <div className="w-full bg-gradient-to-r from-pink-500 via-yellow-400 to-orange-400 text-white py-3 px-4 flex items-center justify-center font-bold text-lg shadow animate-fade-in rounded-b-2xl mb-6">
         <span className="mr-2">⏰</span>
         <span>New Year Special: Get your first plan for <span className="line-through text-white/70">$18</span> <span className="bg-white text-pink-600 px-2 py-1 rounded ml-1">$12</span> or subscribe for <span className="line-through text-white/70">$14/mo</span> <span className="bg-white text-pink-600 px-2 py-1 rounded ml-1">$9/mo</span>! Limited time only.</span>
       </div>
@@ -297,7 +297,7 @@ export default function Page() {
                   LIVE DEMO
                 </div>
                 {/* Interactive demo - enhanced, with state passed from top-level, and scrollable */}
-                <div className="flex flex-col h-full w-full overflow-y-scroll scrollbar-thin scrollbar-thumb-stone-300 scrollbar-track-transparent py-2">
+                <div className="flex flex-col h-full w-full overflow-y-scroll overflow-x-hidden scrollbar-thin scrollbar-thumb-stone-300 scrollbar-track-transparent py-2">
                                                       {/* Confetti animation overlay */}
                                                       {showConfetti && (
                                                         <div className="absolute inset-0 z-40 pointer-events-none flex items-center justify-center">
